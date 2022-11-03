@@ -65,8 +65,11 @@ python main.py --use_checkpoint --batch_size=<Batch-Size> --num_steps=<Num-Steps
 --eval_num=<Eval-Num> --logdir=<Exp-Num> --lr=<Lr> --roi_x=<Roi_x> --roi_y=<Roi_y> --roi_z=<Roi_z>
 ```
 
+# License
+See the [LICENSE](LICENSE) file for details
 
-# Citation
+
+# Citations
 If you find this repository useful, please consider citing UNETR paper:
 
 ```
