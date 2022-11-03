@@ -1,6 +1,21 @@
-# Model Overview
-This repository contains the code for self-supervised pre-training of Swin UNETR model[1] for medical image segmentation. Swin UNETR is the state-of-the-art on Medical Segmentation
-Decathlon (MSD) and Beyond the Cranial Vault (BTCV) Segmentation Challenge dataset. The architecture of Swin UNETR is illustrated below:
+<div align="center">
+
+  <h1>[MED] [3D] [SEG] Swin UNETR</h1>
+  <p>This repository contains the code for self-supervised pre-training of Swin UNETR model for medical image segmentation. In this readme, you will find a description of Swin UNETR, examples of how to use the code, and links to our datasets and weights.</p>
+
+</div>
+
+<div align="center">
+  
+  <a href="https://arxiv.org/pdf/2201.01266v1.pdf">![arXiv](https://img.shields.io/badge/arXiv-1234.56789-b31b1b.svg)</a>
+  <a href="https://colab.research.google.com/drive/1IqdpUPM_CoKYj6EHNb-IYaCiHvEiM08D">![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)</a>
+
+</div>
+
+<hr />
+
+# What is Swin UNETR?
+Swin UNETR is the state-of-the-art on Medical Segmentation Decathlon (MSD) and Beyond the Cranial Vault (BTCV) Segmentation Challenge dataset. The architecture of Swin UNETR is illustrated below:
 
 ![image](./assets/swin_unetr.png)
 
