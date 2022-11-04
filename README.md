@@ -32,9 +32,10 @@ The following demonstrates an animation of original images (left) and their reco
 
 
 # Installing Dependencies
-Dependencies can be installed using:
-``` bash
-pip install -r requirements.txt
+Create conda env with yml file and activate
+```
+conda env create -f environment.yml
+conda activate swin_unetr
 ```
 
 # Pre-trained Models
