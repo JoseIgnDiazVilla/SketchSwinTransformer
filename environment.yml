@@ -13,6 +13,7 @@ dependencies:
   - brotli=1.0.9=h166bdaf_8
   - brotli-bin=1.0.9=h166bdaf_8
   - bzip2=1.0.8=h7f98852_4
+  - c-ares=1.18.1=h7f98852_0
   - ca-certificates=2022.9.24=ha878542_0
   - certifi=2022.9.24=pyhd8ed1ab_0
   - cloudpickle=2.2.0=pyhd8ed1ab_0
@@ -23,6 +24,7 @@ dependencies:
   - debugpy=1.6.3=py37hd23a5d3_0
   - decorator=5.1.1=pyhd8ed1ab_0
   - defusedxml=0.7.1=pyhd8ed1ab_0
+  - eigen=3.4.0=h4bd325d_0
   - entrypoints=0.4=pyhd8ed1ab_0
   - expat=2.5.0=h27087fc_0
   - fftw=3.3.10=nompi_hf0379b8_105
@@ -41,6 +43,7 @@ dependencies:
   - glib-tools=2.74.1=h6239696_0
   - gst-plugins-base=1.21.1=h3e40eee_1
   - gstreamer=1.21.1=hd4edc92_1
+  - hdf5=1.12.2=nompi_h2386368_100
   - icu=70.1=h27087fc_0
   - imagecodecs-lite=2019.12.3=py37hc105733_5
   - imageio=2.22.0=pyhfa7a67d_0
@@ -75,9 +78,11 @@ dependencies:
   - libclang=15.0.3=default_h2e3cab8_0
   - libclang13=15.0.3=default_h3a83d3e_0
   - libcups=2.3.3=h3e49a29_2
+  - libcurl=7.86.0=h7bff187_1
   - libdb=6.2.32=h9c3ff4c_0
   - libdeflate=1.14=h166bdaf_0
   - libedit=3.1.20191231=he28a2e2_2
+  - libev=4.33=h516909a_1
   - libevent=2.1.10=h9b69904_4
   - libffi=3.4.2=h7f98852_5
   - libflac=1.4.2=h27087fc_0
@@ -87,8 +92,11 @@ dependencies:
   - libglib=2.74.1=h7a41b64_0
   - libgomp=12.2.0=h65d4601_19
   - libiconv=1.17=h166bdaf_0
+  - libitk=5.2.1=hcedbc38_6
+  - libitk-devel=5.2.1=h0a2745d_6
   - liblapack=3.9.0=16_linux64_openblas
   - libllvm15=15.0.3=h63197d8_1
+  - libnghttp2=1.47.0=hdcd2b5c_1
   - libnsl=2.0.0=h7f98852_0
   - libogg=1.3.4=h7f98852_1
   - libopenblas=0.3.21=pthreads_h78a6416_3
@@ -98,6 +106,7 @@ dependencies:
   - libsndfile=1.1.0=h27087fc_0
   - libsodium=1.0.18=h36c2ea0_1
   - libsqlite=3.39.4=h753d276_0
+  - libssh2=1.10.0=haa6b8db_3
   - libstdcxx-ng=12.2.0=h46fd767_19
   - libtiff=4.4.0=h55922b4_4
   - libtool=2.4.6=h9c3ff4c_1008
@@ -148,6 +157,7 @@ dependencies:
   - ptyprocess=0.7.0=pyhd3deb0d_0
   - pulseaudio=14.0=h0d2025b_11
   - pygments=2.13.0=pyhd8ed1ab_0
+  - pynrrd=0.4.2=pyh95af2a2_0
   - pyparsing=3.0.9=pyhd8ed1ab_0
   - pyqt=5.15.7=py37hf30b843_0
   - pyqt5-sip=12.11.0=py37hd23a5d3_0
@@ -167,9 +177,12 @@ dependencies:
   - send2trash=1.8.0=pyhd8ed1ab_0
   - setuptools=65.5.0=pyhd8ed1ab_0
   - simplegeneric=0.8.1=py_1
+  - simpleitk=2.1.1.1=py37h78a9f20_0
   - sip=6.6.2=py37hd23a5d3_0
   - six=1.16.0=pyh6c4a22f_0
   - sqlite=3.39.4=h4ff8645_0
+  - tbb=2021.6.0=h924138e_1
+  - tbb-devel=2021.6.0=h924138e_1
   - terminado=0.17.0=pyh41d4057_0
   - testpath=0.6.0=pyhd8ed1ab_0
   - tifffile=2020.6.3=py_0
@@ -195,6 +208,7 @@ dependencies:
   - xz=5.2.6=h166bdaf_0
   - yaml=0.2.5=h7f98852_2
   - zeromq=4.3.4=h9c3ff4c_1
+  - zlib=1.2.13=h166bdaf_4
   - zstd=1.5.2=h6239696_4
   - pip:
     - einops==0.5.0
