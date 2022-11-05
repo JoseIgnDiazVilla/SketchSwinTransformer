@@ -56,14 +56,15 @@ model = SwinUNETR(
     out_channels=model_out_channels,
     feature_size=48,
     use_checkpoint=True,
-).to(device)
+)
 print('Loading model...')
 model.load_state_dict(torch.load(model_weights_path))
+model.to(device)
 model.eval()
 
 with torch.no_grad():
     print('Predicting masks...')
-    test_inputs = torch.unsqueeze(data["image"], 1).cuda()
+    test_inputs = torch.unsqueeze(data["image"], 1).to(device)
     test_outputs = sliding_window_inference(
         test_inputs, (96, 96, 96), 4, model, overlap=0.8
     )
