@@ -24,6 +24,7 @@ model_out_channels = 4
 model_weights_path = "data/3d_swin_unetr_lungs_covid.pth"
 image_path = "data/images/radiopaedia_4_85506_1.nii.gz"
 mask_path = "data/masks/radiopaedia_4_85506_1.nii.gz"
+visualization_path = "data/visualization.png"
 
 
 test_transforms = Compose(
@@ -42,6 +43,9 @@ test_transforms = Compose(
         EnsureTyped(keys=["image"], device=device, track_meta=True),
     ]
 )
+data = test_transforms({
+    "image": image_path
+})
 
 model = SwinUNETR(
     img_size=(96, 96, 96),
@@ -55,11 +59,6 @@ model.load_state_dict(torch.load(model_weights_path))
 model.eval()
 
 with torch.no_grad():
-    print('Transforming data...')
-    data = test_transforms({
-        "image": image_path
-    })
-    
     print('Predicting masks...')
     test_inputs = torch.unsqueeze(data["image"], 1).cuda()
     test_outputs = sliding_window_inference(
@@ -69,7 +68,6 @@ with torch.no_grad():
     test_outputs = torch.argmax(test_outputs, dim=1).detach().cpu()
     test_inputs = test_inputs.cpu().numpy()
 
-print('Visualizing predictions...')
 slice_rate = 0.5
 slice_num = int(test_inputs.shape[-1]*slice_rate)
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -77,4 +75,4 @@ ax1.imshow(test_inputs[0, 0, :, :, slice_num], cmap="gray")
 ax1.set_title('Image')
 ax2.imshow(test_outputs[0, :, :, slice_num])
 ax2.set_title(f'Predict')
-plt.show()
+plt.savefig(visualization_path, bbox_inches='tight')
