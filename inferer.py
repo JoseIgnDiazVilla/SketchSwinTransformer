@@ -20,6 +20,12 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
+model_out_channels = 4
+model_weights_path = "data/3d_swin_unetr_lungs_covid.pth"
+image_path = "data/images/radiopaedia_4_85506_1.nii.gz"
+mask_path = "data/masks/radiopaedia_4_85506_1.nii.gz"
+
+
 test_transforms = Compose(
     [
         LoadImaged(keys=["image"], ensure_channel_first=True),
@@ -37,12 +43,6 @@ test_transforms = Compose(
     ]
 )
 
-model_out_channels = 4
-model_weights_path = "data/3d_swin_unetr_lungs_covid.pth"
-image_path = "data/images/radiopaedia_4_85506_1.nii.gz"
-mask_path = "data/masks/radiopaedia_4_85506_1.nii.gz"
-
-
 model = SwinUNETR(
     img_size=(96, 96, 96),
     in_channels=1,
@@ -52,7 +52,6 @@ model = SwinUNETR(
 ).to(device)
 model.load_state_dict(torch.load(model_weights_path))
 model.eval()
-
 
 with torch.no_grad():
     data = test_transforms({
@@ -68,13 +67,13 @@ with torch.no_grad():
     test_inputs = test_inputs.cpu().numpy()
     test_labels = torch.unsqueeze(data["label"], 1).cpu().numpy()
 
-    slice_rate = 0.5
-    slice_num = int(test_inputs.shape[-1]*slice_rate)
-    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
-    ax1.imshow(test_inputs[0, 0, :, :, slice_num], cmap="gray")
-    ax1.set_title('Image')
-    ax2.imshow(test_labels[0, 0, :, :, slice_num])
-    ax2.set_title(f'Label')
-    ax3.imshow(test_outputs[0, :, :, slice_num])
-    ax3.set_title(f'Predict')
-    plt.show()
+slice_rate = 0.5
+slice_num = int(test_inputs.shape[-1]*slice_rate)
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
+ax1.imshow(test_inputs[0, 0, :, :, slice_num], cmap="gray")
+ax1.set_title('Image')
+ax2.imshow(test_labels[0, 0, :, :, slice_num])
+ax2.set_title(f'Label')
+ax3.imshow(test_outputs[0, :, :, slice_num])
+ax3.set_title(f'Predict')
+plt.show()
