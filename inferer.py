@@ -72,7 +72,7 @@ with torch.no_grad():
 print('Visualizing predictions...')
 slice_rate = 0.5
 slice_num = int(test_inputs.shape[-1]*slice_rate)
-fig, (ax1, ax2, ax3) = plt.subplots(1, 2, figsize=(12, 6))
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 ax1.imshow(test_inputs[0, 0, :, :, slice_num], cmap="gray")
 ax1.set_title('Image')
 ax2.imshow(test_outputs[0, :, :, slice_num])
