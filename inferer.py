@@ -11,6 +11,8 @@ from monai.transforms import (
 )
 from monai.networks.nets import SwinUNETR
 from monai.inferers import sliding_window_inference
+import nibabel as nib
+import numpy as np
 import torch
 import warnings
 
@@ -24,6 +26,7 @@ model_out_channels = 4
 model_weights_path = "data/3d_swin_unetr_lungs_covid.pth"
 image_path = "data/images/radiopaedia_4_85506_1.nii.gz"
 mask_path = "data/masks/radiopaedia_4_85506_1.nii.gz"
+prediction_path = "data/prediction.nii.gz"
 visualization_path = "data/visualization.png"
 
 
@@ -67,6 +70,9 @@ with torch.no_grad():
 
     test_outputs = torch.argmax(test_outputs, dim=1).detach().cpu()
     test_inputs = test_inputs.cpu().numpy()
+
+    test_outputs = nib.Nifti1Image(data, affine=np.eye(4))
+    nib.save(test_outputs, prediction_path)
 
 slice_rate = 0.5
 slice_num = int(test_inputs.shape[-1]*slice_rate)
