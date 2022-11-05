@@ -37,22 +37,27 @@ test_transforms = Compose(
     ]
 )
 
+model_out_channels = 4
+model_weights_path = "data/3d_swin_unetr_lungs_covid.pth"
+image_path = "data/images/radiopaedia_4_85506_1.nii.gz"
+mask_path = "data/masks/radiopaedia_4_85506_1.nii.gz"
+
 
 model = SwinUNETR(
     img_size=(96, 96, 96),
     in_channels=1,
-    out_channels=100000,
+    out_channels=model_out_channels,
     feature_size=48,
     use_checkpoint=True,
 ).to(device)
-model.load_state_dict(torch.load("data/3d_swin_unetr_lungs_covid.pth"))
+model.load_state_dict(torch.load(model_weights_path))
 model.eval()
 
 
 with torch.no_grad():
     data = test_transforms({
-        "image": "data/images/radiopaedia_4_85506_1.nii.gz",
-        "label": "data/masks/radiopaedia_4_85506_1.nii.gz",
+        "image": image_path,
+        "label": mask_path,
     })
     test_inputs = torch.unsqueeze(data["image"], 1).cuda()
     test_outputs = sliding_window_inference(
