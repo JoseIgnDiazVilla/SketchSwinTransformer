@@ -45,7 +45,7 @@ model = SwinUNETR(
     feature_size=48,
     use_checkpoint=True,
 ).to(device)
-model.load_state_dict(torch.load(100000))
+model.load_state_dict(torch.load("data/3d_swin_unetr_lungs_covid.pth"))
 model.eval()
 
 
@@ -58,7 +58,7 @@ with torch.no_grad():
     test_outputs = sliding_window_inference(
         test_inputs, (96, 96, 96), 4, model, overlap=0.8
     )
-    
+
     test_outputs = torch.argmax(test_outputs, dim=1).detach().cpu()
     test_inputs = test_inputs.cpu().numpy()
     test_labels = torch.unsqueeze(data["label"], 1).cpu().numpy()
