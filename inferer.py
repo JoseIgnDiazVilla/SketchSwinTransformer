@@ -50,14 +50,17 @@ model = SwinUNETR(
     feature_size=48,
     use_checkpoint=True,
 ).to(device)
+print('Loading model...')
 model.load_state_dict(torch.load(model_weights_path))
 model.eval()
 
 with torch.no_grad():
+    print('Transforming data...')
     data = test_transforms({
-        "image": image_path,
-        "label": mask_path,
+        "image": image_path
     })
+    
+    print('Predicting masks...')
     test_inputs = torch.unsqueeze(data["image"], 1).cuda()
     test_outputs = sliding_window_inference(
         test_inputs, (96, 96, 96), 4, model, overlap=0.8
@@ -65,15 +68,13 @@ with torch.no_grad():
 
     test_outputs = torch.argmax(test_outputs, dim=1).detach().cpu()
     test_inputs = test_inputs.cpu().numpy()
-    test_labels = torch.unsqueeze(data["label"], 1).cpu().numpy()
 
+print('Visualizing predictions...')
 slice_rate = 0.5
 slice_num = int(test_inputs.shape[-1]*slice_rate)
-fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
+fig, (ax1, ax2, ax3) = plt.subplots(1, 2, figsize=(12, 6))
 ax1.imshow(test_inputs[0, 0, :, :, slice_num], cmap="gray")
 ax1.set_title('Image')
-ax2.imshow(test_labels[0, 0, :, :, slice_num])
-ax2.set_title(f'Label')
-ax3.imshow(test_outputs[0, :, :, slice_num])
-ax3.set_title(f'Predict')
+ax2.imshow(test_outputs[0, :, :, slice_num])
+ax2.set_title(f'Predict')
 plt.show()
