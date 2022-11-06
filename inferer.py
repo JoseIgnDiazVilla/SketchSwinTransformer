@@ -16,7 +16,6 @@ from monai.transforms import (
 )
 from monai.networks.nets import SwinUNETR
 from monai.inferers import sliding_window_inference
-from tqdm.notebook import tqdm
 from PIL import Image
 import nibabel as nib
 import numpy as np
@@ -156,7 +155,7 @@ dicom_path = os.path.join(prediction_path, 'dicom')
 os.makedirs(image_path)
 os.makedirs(dicom_path)
 nifti_array = test_outputs.get_fdata()
-for i in tqdm(range(test_outputs.shape[2])):
+for i in range(test_outputs.shape[-1]):
     slice = nifti_array[:, :, i]
     img = Image.fromarray(np.uint8(slice))
     img.save(os.path.join(prediction_path, 'image', f'{str(i).zfill(5)}.jpg'))
