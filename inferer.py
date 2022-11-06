@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 from monai.transforms import (
     AddChanneld,
     Compose,
+    CenterScaleCropd,
     LoadImaged,
     ScaleIntensityRanged,
     CropForegroundd,
     Orientationd,
-    RandScaleCropd,
     Resized,
     Spacingd,
     EnsureTyped,
@@ -87,13 +87,10 @@ test_transforms = {
     ),
 }
 if cut_borders == 'On':
-    test_transforms.insert(2, 
-        RandScaleCropd(
+    test_transforms.insert(1, 
+        CenterScaleCropd(
             keys=["image"],
             roi_scale=(0.66,0.66,1.0),
-            max_roi_scale=(0.66,0.66,1.0),
-            random_center=False,
-            random_size=False
         ))
 test_transforms = test_transforms[task_form]
 data = test_transforms({
