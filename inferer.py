@@ -87,7 +87,7 @@ test_transforms = {
     ),
 }
 if cut_borders == 'On':
-    test_transforms.insert(1, 
+    test_transforms.insert(2, 
         RandScaleCropd(
             keys=["image"],
             roi_scale=(0.66,0.66,1.0),
