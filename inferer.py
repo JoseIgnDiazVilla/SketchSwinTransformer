@@ -1,4 +1,7 @@
 import os
+import copy
+import json
+import shutil
 import matplotlib.pyplot as plt
 from monai.transforms import (
     AddChanneld,
@@ -117,6 +120,16 @@ ax2.imshow(test_outputs[0, :, :, slice_num])
 ax2.set_title(f'Predict')
 plt.savefig(visualization_path, bbox_inches='tight')
 
+
+test_outputs = np.round(test_outputs[0]/model_out_channels*255, 0)
+print('Label classes/colors:', np.unique(test_outputs) )
+
+
+test_outputs = nib.Nifti1Image(test_outputs, affine=np.eye(4))
+nib.save(test_outputs, prediction_path+'.nii.gz')
+
+
+dicom_temp_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dcmimage.dcm')
 def nifti2dicom(arr):
     """
     `arr`: parameter will take a numpy array that represents only one slice.
@@ -124,7 +137,7 @@ def nifti2dicom(arr):
     `index`: parameter will represent the index of the slice, so this parameter will be used to put
     the name of each slice while using a for loop to convert all the slices
     """
-    dicom_file = pydicom.dcmread('dcmimage.dcm')
+    dicom_file = pydicom.dcmread(dicom_temp_path)
     arr = arr.astype('uint16')
     dicom_file.Rows = arr.shape[0]
     dicom_file.Columns = arr.shape[1]
@@ -137,12 +150,12 @@ def nifti2dicom(arr):
     dicom_file.PixelData = arr.tobytes()
     return dicom_file
 
-test_outputs = test_outputs[0]
-test_outputs = nib.Nifti1Image(test_outputs, affine=np.eye(4))
-nib.save(test_outputs, prediction_path+'.nii.gz')
-
-os.makedirs(os.path.join(prediction_path, 'image'), exist_ok=True)
-os.makedirs(os.path.join(prediction_path, 'dicom'), exist_ok=True)
+image_path = os.path.join(prediction_path, 'image')
+dicom_path = os.path.join(prediction_path, 'dicom')
+shutil.rmtree(image_path)
+shutil.rmtree(dicom_path)
+os.makedirs(image_path)
+os.makedirs(dicom_path)
 nifti_array = test_outputs.get_fdata()
 for i in tqdm(range(test_outputs.shape[2])):
     print(nifti_array.shape)
