@@ -137,13 +137,14 @@ def nifti2dicom(arr):
     dicom_file.PixelData = arr.tobytes()
     return dicom_file
 
-
+test_outputs = test_outputs[0]
 test_outputs = nib.Nifti1Image(test_outputs, affine=np.eye(4))
 nib.save(test_outputs, prediction_path+'.nii.gz')
 
 os.makedirs(prediction_path, exist_ok=True)
 nifti_array = test_outputs.get_fdata()
 for i in tqdm(range(test_outputs.shape[2])):
+    print(nifti_array.shape)
     slice = nifti_array[:, :, i]
     img = Image.fromarray(np.uint8(slice))
     img.save(os.path.join(prediction_path, f'{str(i).zfill(5)}.jpg'))
