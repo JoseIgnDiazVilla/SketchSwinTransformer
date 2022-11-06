@@ -153,8 +153,6 @@ def nifti2dicom(arr):
 
 image_path = os.path.join(prediction_path, 'image')
 dicom_path = os.path.join(prediction_path, 'dicom')
-shutil.rmtree(image_path)
-shutil.rmtree(dicom_path)
 os.makedirs(image_path)
 os.makedirs(dicom_path)
 nifti_array = test_outputs.get_fdata()
