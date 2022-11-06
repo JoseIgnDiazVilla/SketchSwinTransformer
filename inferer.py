@@ -1,6 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 from monai.transforms import (
+    AddChanneld,
     Compose,
     LoadImaged,
     ScaleIntensityRanged,
@@ -40,7 +41,8 @@ visualization_path = args.visualization_path
 
 test_transforms = Compose(
     [
-        LoadImaged(keys=["image"], ensure_channel_first=True),
+        LoadImaged(keys=["image"]),
+        AddChanneld(),
         ScaleIntensityRanged(
             keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
         ),
