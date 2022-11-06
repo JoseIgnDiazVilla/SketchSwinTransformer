@@ -7,16 +7,19 @@ from monai.transforms import (
     ScaleIntensityRanged,
     CropForegroundd,
     Orientationd,
+    Resized,
     Spacingd,
     EnsureTyped,
 )
 from monai.networks.nets import SwinUNETR
 from monai.inferers import sliding_window_inference
+from tqdm.notebook import tqdm
 import nibabel as nib
 import numpy as np
 import torch
 import warnings
 import argparse
+import pydicom
 
 
 warnings.filterwarnings("ignore")
@@ -25,6 +28,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument('-t', '--task_form', type=str, required=True, help="task form")
 parser.add_argument('-o', '--model_out_channels', type=int, required=True, help="model out channels")
 parser.add_argument('-w', '--model_weights_path', type=str, required=True, help="model weights path")
 parser.add_argument('-d', '--data_path', type=str, required=True, help="data path")
@@ -32,6 +36,7 @@ parser.add_argument('-p', '--prediction_path', type=str, required=True, help="pr
 parser.add_argument('-v', '--visualization_path', type=str, required=True, help="visualization path")
 args = parser.parse_args()
 
+task_form = args.task_form
 model_out_channels = args.model_out_channels
 model_weights_path = args.model_weights_path
 data_path = args.data_path
@@ -39,23 +44,43 @@ prediction_path = args.prediction_path
 visualization_path = args.visualization_path
 
 
-test_transforms = Compose(
-    [
-        LoadImaged(keys=["image"]),
-        AddChanneld(keys=["image"]),
-        ScaleIntensityRanged(
-            keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
-        ),
-        CropForegroundd(keys=["image"], source_key="image"),
-        Orientationd(keys=["image"], axcodes="RAS"),
-        Spacingd(
-            keys=["image"],
-            pixdim=(1.5, 1.5, 2.0),
-            mode=("bilinear"),
-        ),
-        EnsureTyped(keys=["image"], device=device, track_meta=True),
-    ]
-)
+test_transforms = {
+    '3D Segmentation lung lobes': Compose(
+        [
+            LoadImaged(keys=["image"]),
+            AddChanneld(keys=["image"]),
+            ScaleIntensityRanged(
+                keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
+            ),
+            CropForegroundd(keys=["image"], source_key="image"),
+            Orientationd(keys=["image"], axcodes="RAS"),
+            Resized(
+                keys=["image"],
+                spatial_size=(128, 128, 128),
+                mode=("trilinear"),
+            ),
+            EnsureTyped(keys=["image"], device=device, track_meta=False),
+        ]
+    ),
+    '3D Segmentation lungs covid': Compose(
+        [
+            LoadImaged(keys=["image"]),
+            AddChanneld(keys=["image"]),
+            ScaleIntensityRanged(
+                keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
+            ),
+            CropForegroundd(keys=["image"], source_key="image"),
+            Orientationd(keys=["image"], axcodes="RAS"),
+            Spacingd(
+                keys=["image"],
+                pixdim=(1.5, 1.5, 2.0),
+                mode=("bilinear"),
+            ),
+            EnsureTyped(keys=["image"], device=device, track_meta=True),
+        ]
+    ),
+}
+test_transforms = test_transforms[task_form]
 data = test_transforms({
     "image": data_path
 })
@@ -93,3 +118,37 @@ plt.savefig(visualization_path, bbox_inches='tight')
 
 test_outputs = nib.Nifti1Image(test_outputs, affine=np.eye(4))
 nib.save(test_outputs, prediction_path)
+
+def convertNsave(arr, file_dir, index=0):
+    """
+    `arr`: parameter will take a numpy array that represents only one slice.
+    `file_dir`: parameter will take the path to save the slices
+    `index`: parameter will represent the index of the slice, so this parameter will be used to put
+    the name of each slice while using a for loop to convert all the slices
+    """
+    dicom_file = pydicom.dcmread('images/dcmimage.dcm')
+    arr = arr.astype('uint16')
+    dicom_file.Rows = arr.shape[0]
+    dicom_file.Columns = arr.shape[1]
+    dicom_file.PhotometricInterpretation = "MONOCHROME2"
+    dicom_file.SamplesPerPixel = 1
+    dicom_file.BitsStored = 16
+    dicom_file.BitsAllocated = 16
+    dicom_file.HighBit = 15
+    dicom_file.PixelRepresentation = 1
+    dicom_file.PixelData = arr.tobytes()
+    dicom_file.save_as(os.path.join(file_dir, f'{str(index).zfill(5)}.dcm'))
+
+def nifti2dicom_1file(nifti_dir, out_dir):
+  """
+  This function is to convert only one nifti file into dicom series
+  `nifti_dir`: the path to the one nifti file
+  `out_dir`: the path to output
+  """
+  nifti_file = nib.load(nifti_dir)
+  nifti_array = nifti_file.get_fdata()
+  number_slices = nifti_array.shape[2]
+  os.makedirs(out_dir, exist_ok=True)
+
+  for slice_ in tqdm(range(number_slices)):
+    convertNsave(nifti_array[:, :, slice_], out_dir, slice_)
