@@ -51,40 +51,36 @@ visualization_path = args.visualization_path
 
 
 test_transforms = {
-    '3D Segmentation lung lobes': Compose(
-        [
-            LoadImaged(keys=["image"]),
-            AddChanneld(keys=["image"]),
-            ScaleIntensityRanged(
-                keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
-            ),
-            CropForegroundd(keys=["image"], source_key="image"),
-            Orientationd(keys=["image"], axcodes="RAS"),
-            Resized(
-                keys=["image"],
-                spatial_size=(128, 128, 128),
-                mode=("trilinear"),
-            ),
-            EnsureTyped(keys=["image"], device=device, track_meta=False),
-        ]
-    ),
-    '3D Segmentation lungs covid': Compose(
-        [
-            LoadImaged(keys=["image"]),
-            AddChanneld(keys=["image"]),
-            ScaleIntensityRanged(
-                keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
-            ),
-            CropForegroundd(keys=["image"], source_key="image"),
-            Orientationd(keys=["image"], axcodes="RAS"),
-            Spacingd(
-                keys=["image"],
-                pixdim=(1.5, 1.5, 2.0),
-                mode=("bilinear"),
-            ),
-            EnsureTyped(keys=["image"], device=device, track_meta=True),
-        ]
-    ),
+    '3D Segmentation lung lobes': [
+        LoadImaged(keys=["image"]),
+        AddChanneld(keys=["image"]),
+        ScaleIntensityRanged(
+            keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
+        ),
+        CropForegroundd(keys=["image"], source_key="image"),
+        Orientationd(keys=["image"], axcodes="RAS"),
+        Resized(
+            keys=["image"],
+            spatial_size=(128, 128, 128),
+            mode=("trilinear"),
+        ),
+        EnsureTyped(keys=["image"], device=device, track_meta=False),
+    ],
+    '3D Segmentation lungs covid': [
+        LoadImaged(keys=["image"]),
+        AddChanneld(keys=["image"]),
+        ScaleIntensityRanged(
+            keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
+        ),
+        CropForegroundd(keys=["image"], source_key="image"),
+        Orientationd(keys=["image"], axcodes="RAS"),
+        Spacingd(
+            keys=["image"],
+            pixdim=(1.5, 1.5, 2.0),
+            mode=("bilinear"),
+        ),
+        EnsureTyped(keys=["image"], device=device, track_meta=True),
+    ],
 }
 test_transforms = test_transforms[task_form]
 if cut_borders == 'On':
@@ -93,7 +89,7 @@ if cut_borders == 'On':
             keys=["image"],
             roi_scale=(0.66,0.66,1.0),
         ))
-data = test_transforms({
+data = Compose(test_transforms)({
     "image": data_path
 })
 
