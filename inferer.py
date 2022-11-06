@@ -124,7 +124,7 @@ def nifti2dicom(arr):
     `index`: parameter will represent the index of the slice, so this parameter will be used to put
     the name of each slice while using a for loop to convert all the slices
     """
-    dicom_file = pydicom.dcmread('images/dcmimage.dcm')
+    dicom_file = pydicom.dcmread('dcmimage.dcm')
     arr = arr.astype('uint16')
     dicom_file.Rows = arr.shape[0]
     dicom_file.Columns = arr.shape[1]
