@@ -125,8 +125,9 @@ test_outputs = np.round(test_outputs[0]/model_out_channels*255, 0)
 print('Label classes/colors:', np.unique(test_outputs) )
 
 
+nii_path = os.path.join(prediction_path, 'mask.nii.gz')
 test_outputs = nib.Nifti1Image(test_outputs, affine=np.eye(4))
-nib.save(test_outputs, prediction_path+'.nii.gz')
+nib.save(test_outputs, nii_path)
 
 
 dicom_temp_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dcmimage.dcm')
@@ -158,7 +159,6 @@ os.makedirs(image_path)
 os.makedirs(dicom_path)
 nifti_array = test_outputs.get_fdata()
 for i in tqdm(range(test_outputs.shape[2])):
-    print(nifti_array.shape)
     slice = nifti_array[:, :, i]
     img = Image.fromarray(np.uint8(slice))
     img.save(os.path.join(prediction_path, 'image', f'{str(i).zfill(5)}.jpg'))
