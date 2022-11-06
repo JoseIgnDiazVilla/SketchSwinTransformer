@@ -156,6 +156,7 @@ dependencies:
   - pthread-stubs=0.4=h36c2ea0_1001
   - ptyprocess=0.7.0=pyhd3deb0d_0
   - pulseaudio=14.0=h0d2025b_11
+  - pydicom=2.3.0=pyh6c4a22f_0
   - pygments=2.13.0=pyhd8ed1ab_0
   - pynrrd=0.4.2=pyh95af2a2_0
   - pyparsing=3.0.9=pyhd8ed1ab_0
