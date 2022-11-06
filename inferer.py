@@ -14,6 +14,7 @@ from monai.transforms import (
 from monai.networks.nets import SwinUNETR
 from monai.inferers import sliding_window_inference
 from tqdm.notebook import tqdm
+from PIL import Image
 import nibabel as nib
 import numpy as np
 import torch
@@ -116,10 +117,7 @@ ax2.imshow(test_outputs[0, :, :, slice_num])
 ax2.set_title(f'Predict')
 plt.savefig(visualization_path, bbox_inches='tight')
 
-test_outputs = nib.Nifti1Image(test_outputs, affine=np.eye(4))
-nib.save(test_outputs, prediction_path)
-
-def convertNsave(arr, file_dir, index=0):
+def nifti2dicom(arr):
     """
     `arr`: parameter will take a numpy array that represents only one slice.
     `file_dir`: parameter will take the path to save the slices
@@ -137,20 +135,17 @@ def convertNsave(arr, file_dir, index=0):
     dicom_file.HighBit = 15
     dicom_file.PixelRepresentation = 1
     dicom_file.PixelData = arr.tobytes()
-    dicom_file.save_as(os.path.join(file_dir, f'{str(index).zfill(5)}.dcm'))
+    return dicom_file
 
-def nifti2dicom_1file(nifti_path, out_dir):
-  """
-  This function is to convert only one nifti file into dicom series
-  `nifti_dir`: the path to the one nifti file
-  `out_dir`: the path to output
-  """
-  nifti_file = nib.load(nifti_path)
-  nifti_array = nifti_file.get_fdata()
-  number_slices = nifti_array.shape[2]
-  os.makedirs(out_dir, exist_ok=True)
 
-  for slice_ in tqdm(range(number_slices)):
-    convertNsave(nifti_array[:, :, slice_], out_dir, slice_)
+test_outputs = nib.Nifti1Image(test_outputs, affine=np.eye(4))
+nib.save(test_outputs, prediction_path+'.nii.gz')
 
-nifti2dicom_1file(prediction_path, prediction_path.replace('.nii.gz', ''))
+os.makedirs(prediction_path, exist_ok=True)
+nifti_array = test_outputs.get_fdata()
+for i in tqdm(range(test_outputs.shape[2])):
+    slice = nifti_array[:, :, i]
+    img = Image.fromarray(np.uint8(slice))
+    img.save(os.path.join(prediction_path, f'{str(i).zfill(5)}.jpg'))
+    dicom_file = nifti2dicom(nifti_array[:, :, i])
+    dicom_file.save_as(os.path.join(prediction_path, f'{str(i).zfill(5)}.dcm'))
