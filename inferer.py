@@ -69,8 +69,8 @@ with torch.no_grad():
         test_inputs, (96, 96, 96), 4, model, overlap=0.8
     )
 
-    test_outputs = torch.argmax(test_outputs, dim=1).detach().cpu()
     test_inputs = test_inputs.cpu().numpy()
+    test_outputs = torch.argmax(test_outputs, dim=1).detach().cpu().numpy()
 
 slice_rate = 0.5
 slice_num = int(test_inputs.shape[-1]*slice_rate)
