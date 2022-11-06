@@ -36,7 +36,7 @@ parser.add_argument('-t', '--task_form', type=str, required=True, help="task for
 parser.add_argument('-o', '--model_out_channels', type=int, required=True, help="model out channels")
 parser.add_argument('-w', '--model_weights_path', type=str, required=True, help="model weights path")
 parser.add_argument('-d', '--data_path', type=str, required=True, help="data path")
-parser.add_argument('-c', '--cut_borders', type=str, required=True, help="cut borders")
+parser.add_argument('-c', '--crop', type=str, required=True, help="crop")
 parser.add_argument('-p', '--prediction_path', type=str, required=True, help="prediction path")
 parser.add_argument('-v', '--visualization_path', type=str, required=True, help="visualization path")
 args = parser.parse_args()
@@ -45,7 +45,7 @@ task_form = args.task_form
 model_out_channels = args.model_out_channels
 model_weights_path = args.model_weights_path
 data_path = args.data_path
-cut_borders = args.cut_borders
+crop = args.crop
 prediction_path = args.prediction_path
 visualization_path = args.visualization_path
 
@@ -83,7 +83,7 @@ test_transforms = {
     ],
 }
 test_transforms = test_transforms[task_form]
-if cut_borders == 'On':
+if crop == 'On':
     test_transforms.insert(2, 
         CenterScaleCropd(
             keys=["image"],
