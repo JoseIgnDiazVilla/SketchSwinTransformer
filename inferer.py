@@ -87,12 +87,11 @@ test_transforms = {
     ),
 }
 if cut_borders == 'On':
-    test_transforms.append(
+    test_transforms.insert(1, 
         CenterSpatialCropd(
             keys=["image"],
             roi_size=(340,340,340)
-        )
-    )
+        ))
 test_transforms = test_transforms[task_form]
 data = test_transforms({
     "image": data_path
