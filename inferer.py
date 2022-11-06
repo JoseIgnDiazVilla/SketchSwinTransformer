@@ -91,6 +91,7 @@ if cut_borders == 'On':
         RandScaleCropd(
             keys=["image"],
             roi_scale=(0.66,0.66,1.0),
+            max_roi_scale=(0.66,0.66,1.0),
             random_center=False,
             random_size=False
         ))
