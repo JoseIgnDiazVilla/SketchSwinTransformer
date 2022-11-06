@@ -139,16 +139,18 @@ def convertNsave(arr, file_dir, index=0):
     dicom_file.PixelData = arr.tobytes()
     dicom_file.save_as(os.path.join(file_dir, f'{str(index).zfill(5)}.dcm'))
 
-def nifti2dicom_1file(nifti_dir, out_dir):
+def nifti2dicom_1file(nifti_path, out_dir):
   """
   This function is to convert only one nifti file into dicom series
   `nifti_dir`: the path to the one nifti file
   `out_dir`: the path to output
   """
-  nifti_file = nib.load(nifti_dir)
+  nifti_file = nib.load(nifti_path)
   nifti_array = nifti_file.get_fdata()
   number_slices = nifti_array.shape[2]
   os.makedirs(out_dir, exist_ok=True)
 
   for slice_ in tqdm(range(number_slices)):
     convertNsave(nifti_array[:, :, slice_], out_dir, slice_)
+
+nifti2dicom_1file(prediction_path, prediction_path.replace('.nii.gz', ''))
