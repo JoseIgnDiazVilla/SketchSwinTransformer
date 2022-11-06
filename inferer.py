@@ -15,6 +15,7 @@ import nibabel as nib
 import numpy as np
 import torch
 import warnings
+import argparse
 
 
 warnings.filterwarnings("ignore")
@@ -22,12 +23,19 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-model_out_channels = 4
-model_weights_path = "data/3d_swin_unetr_lungs_covid.pth"
-image_path = "data/images/radiopaedia_4_85506_1.nii.gz"
-mask_path = "data/masks/radiopaedia_4_85506_1.nii.gz"
-prediction_path = "data/prediction.nii.gz"
-visualization_path = "data/visualization.png"
+parser = argparse.ArgumentParser()
+parser.add_argument('-o', '--model_out_channels', type=int, required=True, help="model out channels")
+parser.add_argument('-w', '--model_weights_path', type=str, required=True, help="model weights path")
+parser.add_argument('-d', '--data_path', type=str, required=True, help="data path")
+parser.add_argument('-p', '--prediction_path', type=str, required=True, help="prediction path")
+parser.add_argument('-v', '--visualization_path', type=str, required=True, help="visualization path")
+args = parser.parse_args()
+
+model_out_channels = args.model_out_channels
+model_weights_path = args.model_weights_path
+data_path = args.data_path
+prediction_path = args.prediction_path
+visualization_path = args.visualization_path
 
 
 test_transforms = Compose(
@@ -47,7 +55,7 @@ test_transforms = Compose(
     ]
 )
 data = test_transforms({
-    "image": image_path
+    "image": data_path
 })
 
 model = SwinUNETR(
