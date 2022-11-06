@@ -72,9 +72,6 @@ with torch.no_grad():
     test_outputs = torch.argmax(test_outputs, dim=1).detach().cpu()
     test_inputs = test_inputs.cpu().numpy()
 
-    test_outputs = nib.Nifti1Image(data, affine=np.eye(4))
-    nib.save(test_outputs, prediction_path)
-
 slice_rate = 0.5
 slice_num = int(test_inputs.shape[-1]*slice_rate)
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -83,3 +80,6 @@ ax1.set_title('Image')
 ax2.imshow(test_outputs[0, :, :, slice_num])
 ax2.set_title(f'Predict')
 plt.savefig(visualization_path, bbox_inches='tight')
+
+test_outputs = nib.Nifti1Image(test_outputs, affine=np.eye(4))
+nib.save(test_outputs, prediction_path)
