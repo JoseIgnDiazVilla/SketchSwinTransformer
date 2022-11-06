@@ -9,6 +9,7 @@ from monai.transforms import (
     LoadImaged,
     ScaleIntensityRanged,
     CropForegroundd,
+    CenterSpatialCropd,
     Orientationd,
     Resized,
     Spacingd,
@@ -35,6 +36,7 @@ parser.add_argument('-t', '--task_form', type=str, required=True, help="task for
 parser.add_argument('-o', '--model_out_channels', type=int, required=True, help="model out channels")
 parser.add_argument('-w', '--model_weights_path', type=str, required=True, help="model weights path")
 parser.add_argument('-d', '--data_path', type=str, required=True, help="data path")
+parser.add_argument('-c', '--cut_borders', type=bool, required=True, help="cut borders")
 parser.add_argument('-p', '--prediction_path', type=str, required=True, help="prediction path")
 parser.add_argument('-v', '--visualization_path', type=str, required=True, help="visualization path")
 args = parser.parse_args()
@@ -43,6 +45,7 @@ task_form = args.task_form
 model_out_channels = args.model_out_channels
 model_weights_path = args.model_weights_path
 data_path = args.data_path
+cut_borders = args.cut_borders
 prediction_path = args.prediction_path
 visualization_path = args.visualization_path
 
@@ -83,6 +86,13 @@ test_transforms = {
         ]
     ),
 }
+if cut_borders == 'On':
+    test_transforms.append(
+        CenterSpatialCropd(
+            keys=["image"],
+            roi_size=(340,340,340)
+        )
+    )
 test_transforms = test_transforms[task_form]
 data = test_transforms({
     "image": data_path
