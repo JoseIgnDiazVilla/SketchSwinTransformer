@@ -86,13 +86,13 @@ test_transforms = {
         ]
     ),
 }
+test_transforms = test_transforms[task_form]
 if cut_borders == 'On':
     test_transforms.insert(1, 
         CenterScaleCropd(
             keys=["image"],
             roi_scale=(0.66,0.66,1.0),
         ))
-test_transforms = test_transforms[task_form]
 data = test_transforms({
     "image": data_path
 })
