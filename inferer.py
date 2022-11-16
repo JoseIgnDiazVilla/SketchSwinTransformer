@@ -81,6 +81,21 @@ test_transforms = {
         ),
         EnsureTyped(keys=["image"], device=device, track_meta=True),
     ],
+    '3D Segmentation lungs cancer': [
+        LoadImaged(keys=["image"]),
+        AddChanneld(keys=["image"]),
+        ScaleIntensityRanged(
+            keys=["image"], a_min=-175, a_max=250, b_min=0.0, b_max=1.0, clip=True
+        ),
+        CropForegroundd(keys=["image"], source_key="image"),
+        Orientationd(keys=["image"], axcodes="RAS"),
+        Resized(
+            keys=["image"],
+            spatial_size=(340, 340, 340),
+            mode=("trilinear"),
+        ),
+        EnsureTyped(keys=["image"], device=device, track_meta=True),
+    ],
 }
 test_transforms = test_transforms[task_form]
 if crop == 'On':
