@@ -53,7 +53,7 @@ import pprint
 
 warnings.filterwarnings("ignore")
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Using device:", device)
 
