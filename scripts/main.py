@@ -221,7 +221,7 @@ def main():
 
     # Load Pretrained Weights
 
-    weight = torch.load("../model/model_swinvit.pt")
+    weight = torch.load("../models/model_swinvit.pt")
     model.load_from(weights=weight)
 
     def validation(epoch_iterator_val):
