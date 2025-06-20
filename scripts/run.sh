@@ -13,7 +13,7 @@ gdown '1I1LR7XjyEZ-VBQ-Xruh31V7xExMjlVvi' -O ../data/dataset.tar
 
 # Unzip the dataset
 echo "Unzipping dataset..."
-tar -xvzf ../data/dataset.tar -C ../data/
+tar -xvzf ../data/Task06_Lung.tar -C ../data/
 
 # Move images and labels into proper folders
 echo "Organizing files..."
