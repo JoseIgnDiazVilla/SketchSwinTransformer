@@ -9,11 +9,11 @@ wget -O ../models/model_swinvit.pt https://github.com/Project-MONAI/MONAI-extra-
 
 # Download dataset ZIP from Google Drive (using gdown)
 echo "Downloading dataset ZIP from Google Drive..."
-gdown '1I1LR7XjyEZ-VBQ-Xruh31V7xExMjlVvi' -O ../data/dataset.zip
+gdown '1I1LR7XjyEZ-VBQ-Xruh31V7xExMjlVvi' -O ../data/dataset.tar
 
 # Unzip the dataset
 echo "Unzipping dataset..."
-unzip -q ../data/dataset.zip -d ../data/
+tar -xvzf ../data/dataset.tar -C ../data/
 
 # Move images and labels into proper folders
 echo "Organizing files..."
@@ -23,7 +23,7 @@ mv ../data/Task06_Lung/labelsTr/* ../data/masks/
 
 # Clean up
 rm -r ../data/Task06_Lung
-rm ../data/dataset.zip
+rm ../data/dataset.tar
 
 # Run Python script
 echo "Running script..."
