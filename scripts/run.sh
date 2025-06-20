@@ -9,11 +9,11 @@ wget -O ../models/model_swinvit.pt https://github.com/Project-MONAI/MONAI-extra-
 
 # Download dataset ZIP from Google Drive (using gdown)
 echo "Downloading dataset ZIP from Google Drive..."
-gdown '1I1LR7XjyEZ-VBQ-Xruh31V7xExMjlVvi' -O ../data/dataset.tar
+#gdown '1I1LR7XjyEZ-VBQ-Xruh31V7xExMjlVvi' -O ../data/dataset.tar
 
 # Unzip the dataset
 echo "Unzipping dataset..."
-tar -xvzf ../data/Task06_Lung.tar -C ../data/
+#tar -xvf ../data/Task06_Lung.tar -C ../data/
 
 # Move images and labels into proper folders
 echo "Organizing files..."
